@@ -85,7 +85,7 @@ public class AppDbContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        var dbPath = @"C:\Users\m.escobedo.escareno\Documents\football\football.db";//Environment.GetEnvironmentVariable("DBPATH");
+        var dbPath = Environment.GetEnvironmentVariable("DBPATH");
         optionsBuilder.UseSqlite($"Data Source={dbPath}");
     }
 
