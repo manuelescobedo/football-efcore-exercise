@@ -1,6 +1,6 @@
 namespace API.DTOs
 {
-    public class MatchDTO
+    public class TeamStatsDTO
     {
         public string Team { get; set; }
         public int MatchesPlayed

@@ -1,28 +1,27 @@
 using Microsoft.AspNetCore.Mvc;
 using Infrastructure.Persistence;
 using API.DTOs;
-using System.Linq;
 
 namespace API.Controllers;
 
 
 [ApiController]
 [Route("[controller]")]
-public class MatchesController : ControllerBase
+public class TeamsController : ControllerBase
 {
 
-    public MatchesController()
+    public TeamsController()
     {
     }
 
-    [HttpGet(Name = "GetMatches")]
-    public IEnumerable<MatchDTO> Get()
+    [HttpGet("stats")]
+    public IEnumerable<TeamStatsDTO> GetStats()
     {
         using (AppDbContext ctx = new AppDbContext())
         {
             ctx.Database.EnsureCreated();
 
-            return ctx.Stats.ToList().Select((x) => new MatchDTO
+            return ctx.Stats.ToList().Select((x) => new TeamStatsDTO
             {
                 Team = x.Team,
                 MatchesPlayed = x.Games,
