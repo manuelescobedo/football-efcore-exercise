@@ -2,6 +2,7 @@ using System.Text;
 using API.DTOs;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Net.Http.Headers;
+using Shared;
 
 namespace API.Formatters;
 public class CsvOutputFormatter : TextOutputFormatter
@@ -27,39 +28,15 @@ public class CsvOutputFormatter : TextOutputFormatter
         var buffer = new StringBuilder();
         if (context.Object is IEnumerable<TeamStatsDTO> matches)
         {
+            CsvWriter.Write<IEnumerable<TeamStatsDTO>>(buffer, context.Object as IEnumerable<TeamStatsDTO>);
 
-            Add<TeamStatsDTO>(buffer);
-
-            foreach (TeamStatsDTO item in matches)
-            {
-                Add(buffer, item);
-            }
         }
         else
         {
-            Add<TeamStatsDTO>(buffer);
-
-            Add<TeamStatsDTO>(buffer, context.Object as TeamStatsDTO);
+            CsvWriter.Write<TeamStatsDTO>(buffer, context.Object as TeamStatsDTO);
         }
 
         await response.WriteAsync(buffer.ToString(), selectedEncoding);
     }
 
-    void Add<T>(StringBuilder builder)
-    {
-        var props = typeof(T).GetProperties();
-
-        string result = props.Aggregate("", (accum, next) => accum + $@"""{next.Name}"",");
-
-        builder.AppendLine(result.Substring(0, result.Length - 1));
-    }
-
-    void Add<T>(StringBuilder builder, T @object)
-    {
-        var props = typeof(T).GetProperties();
-
-        string result = props.Aggregate("", (accum, next) => accum + $@"""{next.GetValue(@object)}"",");
-
-        builder.AppendLine(result.Substring(0, result.Length - 1));
-    }
 }
